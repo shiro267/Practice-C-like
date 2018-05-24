@@ -1,6 +1,15 @@
 #include "function.h"
 
 
+myMaxHeap::myMaxHeap(vector<int> &p)
+{
+    point = p;
+    point.insert(point.begin(),0);
+    nextPoint = point.size();
+    level = static_cast<int>(static_cast<float>(log(nextPoint-1))/static_cast<float>(log(2)))+1;
+    rebuild();
+}
+
 int myMaxHeap::head()
 {
     if(point.size()==1){
@@ -41,7 +50,7 @@ void myMaxHeap::reSize(int n)
     }
 }
 
-bool myMaxHeap::push(int i)
+void myMaxHeap::push(int n)
 {
     size_t checkP(nextPoint/2);
     size_t curP(nextPoint);
@@ -51,15 +60,14 @@ bool myMaxHeap::push(int i)
         reSize(1);
     }
 
-    while(i>point[checkP] && checkP!=0)
+    while(n>point[checkP] && checkP!=0)
     {
             point[curP] = point[checkP];
             curP = checkP;
             checkP /= 2;
     }
-    point[curP] = i;
+    point[curP] = n;
     ++nextPoint;
-    return true;
 }
 
 
@@ -93,6 +101,54 @@ int myMaxHeap::pop()
     }
     return point[0];
 }
+
+void myMaxHeap::rebuild()
+{
+    for(size_t i=(nextPoint-1)/2; i>0 ; --i)
+    {
+        auto curP = i;
+        int tmp = point[curP];
+        while(curP<nextPoint/2)
+        {
+            if(point[curP*2]>point[curP*2+1])  // 左邊大
+            {
+                if(tmp<point[curP*2])
+                {
+                    point[curP] = point[curP*2];
+                    curP *= 2;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else // 右邊大
+            {
+                if(tmp<point[curP*2+1])
+                {
+                    point[curP] = point[curP*2+1];
+                    curP = curP*2 + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        if(curP*2+1==nextPoint)
+        {
+            if(tmp<point[curP*2])
+            {
+                point[curP] = point[curP*2];
+                curP *= 2;
+            }
+        }
+        point[curP] = tmp;
+    }
+}
+
+
 
 int myMaxHeap::currentLevel()
 {
