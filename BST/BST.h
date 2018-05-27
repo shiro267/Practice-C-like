@@ -40,6 +40,7 @@ public:
    void insertNode(TreeNode* x); // limited the node cannot have any child!
                                  // if the same value is already inserted in the BST, then do nothing.
    void insertNode(int& x);
+   void deleteNode(int& x);
 
     //---output---///
 

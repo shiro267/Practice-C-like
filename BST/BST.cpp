@@ -1,3 +1,5 @@
+
+//#define DEBUG
 #include "BST.h"
 
 
@@ -54,7 +56,57 @@ vector<int> BST::levelorderTraverse()
 {
     if(root==nullptr) return vector<int>();
     auto traverseNode = root;
-    vector<int> ans;
+    vector<int> ans;#ifdef DEBUG
+    cout << "enter left subtree" << endl;
+#endif // DEBUG
+        cur_node = cur_node->left;
+        while(cur_node->right!=nullptr)
+        {
+            searchedNode_parent = cur_node;
+            cur_node = cur_node->right;
+        }
+
+#ifdef DEBUG
+    cout << cur_node->val << " = LeftMax Node" << endl;
+    cout << searchedNode_parent->val << " = searched parent Node" << endl;
+#endif // DEBUG
+
+        if(parent==nullptr)
+        {
+#ifdef DEBUG
+    cout << "into parent==nullptr" << endl;
+#endif // DEBUG
+            if(searchedNode_parent!=d_Node)
+            {
+                searchedNode_parent->right = cur_node->left;
+                cur_node->left = d_Node->left;
+                cur_node->right = d_Node->right;
+            }
+            else
+            {
+                cur_node->right = d_Node->right;
+            }
+            root = cur_node;
+        }
+        else
+        {
+#ifdef DEBUG
+    cout << "into parent!=nullptr" << endl;
+#endif // DEBUG
+            if(parent->val > cur_node->val){parent->left = cur_node;}
+            else{parent->right = cur_node;}
+
+            if(searchedNode_parent!=d_Node)
+            {
+                searchedNode_parent->right = cur_node->left;
+                cur_node->left = d_Node->left;
+                cur_node->right = d_Node->right;
+            }
+            else
+            {
+                cur_node->right = d_Node->right;
+            }
+        }
     queue<TreeNode*> cur_level;
 
     cur_level.push(traverseNode);
@@ -150,4 +202,157 @@ void BST::insertNode(int& x)
             return;
         }
     }
+}
+
+
+
+
+void BST::deleteNode(int& x)
+{
+    TreeNode* parent = nullptr;
+    TreeNode* cur_node = root;
+    while(cur_node!=nullptr && x!=cur_node->val)
+    {
+        parent = cur_node;
+        if(x>cur_node->val)
+        {
+            cur_node = cur_node->right;
+        }
+        else
+        {
+            cur_node = cur_node->left;
+        }
+    }
+
+    if(cur_node==nullptr)return;
+
+#ifdef DEBUG
+    cout << cur_node->val << " = cur_node->val" << endl;
+    if(parent!=nullptr) cout << parent->val << " = parent->val" << endl;
+#endif // DEBUG
+
+    TreeNode* d_Node = cur_node;
+    TreeNode* searchedNode_parent = cur_node;
+
+    if(cur_node->left!=nullptr) //找左邊最大的
+    {
+#ifdef DEBUG
+    cout << "enter left subtree" << endl;
+#endif // DEBUG
+        cur_node = cur_node->left;
+        while(cur_node->right!=nullptr)
+        {
+            searchedNode_parent = cur_node;
+            cur_node = cur_node->right;
+        }
+
+#ifdef DEBUG
+    cout << cur_node->val << " = LeftMax Node" << endl;
+    cout << searchedNode_parent->val << " = searched parent Node" << endl;
+#endif // DEBUG
+
+        if(parent==nullptr)
+        {
+#ifdef DEBUG
+    cout << "into parent==nullptr" << endl;
+#endif // DEBUG
+            if(searchedNode_parent!=d_Node)
+            {
+                searchedNode_parent->right = cur_node->left;
+                cur_node->left = d_Node->left;
+                cur_node->right = d_Node->right;
+            }
+            else
+            {
+                cur_node->right = d_Node->right;
+            }
+            root = cur_node;
+        }
+        else
+        {
+#ifdef DEBUG
+    cout << "into parent!=nullptr" << endl;
+#endif // DEBUG
+            if(parent->val > cur_node->val){parent->left = cur_node;}
+            else{parent->right = cur_node;}
+
+            if(searchedNode_parent!=d_Node)
+            {
+                searchedNode_parent->right = cur_node->left;
+                cur_node->left = d_Node->left;
+                cur_node->right = d_Node->right;
+            }
+            else
+            {
+                cur_node->right = d_Node->right;
+            }
+        }
+
+    }
+    else if(cur_node->right!=nullptr)//左邊空 - >找右邊最小的
+    {
+#ifdef DEBUG
+    cout << "enter right subtree" << endl;
+#endif // DEBUG
+        cur_node = cur_node->right;
+        while(cur_node->left!=nullptr)
+        {
+            searchedNode_parent = cur_node;
+            cur_node = cur_node->left;
+        }
+
+#ifdef DEBUG
+    cout << cur_node->val << " = LeftMax Node" << endl;
+    cout << searchedNode_parent->val << " = searched parent Node" << endl;
+#endif // DEBUG
+
+        if(parent==nullptr)
+        {
+#ifdef DEBUG
+    cout << "into parent==nullptr" << endl;
+#endif // DEBUG
+            if(searchedNode_parent!=d_Node)
+            {
+                searchedNode_parent->left = cur_node->right;
+                cur_node->right = d_Node->right;
+            }
+            root = cur_node;
+        }
+        else
+        {
+#ifdef DEBUG
+    cout << "into parent!=nullptr" << endl;
+#endif // DEBUG
+            if(parent->val > cur_node->val){parent->left = cur_node;}
+            else{parent->right = cur_node;}
+
+            if(searchedNode_parent!=d_Node)
+            {
+                searchedNode_parent->left = cur_node->right;
+                cur_node->right = d_Node->right;
+            }
+        }
+    }
+    else //都空(leaf) 直接刪掉這點
+    {
+        if(parent==nullptr)
+        {
+            root = nullptr;
+        }
+        else if(parent->val > cur_node->val)
+        {
+            parent->left = nullptr;
+        }
+        else
+        {
+            parent->right = nullptr;
+        }
+
+        delete cur_node;
+        return;
+    }
+
+
+    delete d_Node;
+    return;
 }

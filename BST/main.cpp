@@ -8,12 +8,20 @@ int main()
     string input;
     BST myTree;
     vector<int> TraverseData;
+
+    vector<int> defau = {5,3,6,2,4,7,1,10,0,8,9};
+
+    for(auto&c : defau)
+    {
+        myTree.insertNode(c);
+    }
+
     while(cin>>input)
     {
 
         transform(input.begin(),input.end(),input.begin(),::tolower);
 
-        if(input=="insert")
+        if(input=="insert" || input=="i")
         {
             int x;
             cin >> x;
@@ -40,9 +48,11 @@ int main()
             TraverseData = myTree.levelorderTraverse();
             print(TraverseData);
         }
-        else if(input=="delete")
+        else if(input=="delete" || input=="d")
         {
-
+            int x;
+            cin >> x;
+            myTree.deleteNode(x);
         }
         else if(input=="showall")
         {
