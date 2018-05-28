@@ -8,6 +8,22 @@ using namespace std;
 #endif // LIBRARY
 
 
+#ifndef SWAP
+#define SWAP
+
+template <typename S>
+void myswap(S& a,S& b)
+{
+    S tmp;
+    tmp = a;
+    a = b;
+    b = tmp;
+    return;
+}
+
+#endif // SWAP
+
+
 #ifndef BUBBLE_SORT
 #define BUBBLE_SORT
 
@@ -22,7 +38,7 @@ void BubbleSort(T& input)
             if(input[j-1]>input[j])
             {
                 swaped = true;
-                swap(input[j-1],input[j]);
+                myswap(input[j-1],input[j]);
             }
         }
         if(swaped==false)return;
@@ -32,17 +48,6 @@ void BubbleSort(T& input)
 
 #endif //BUBBLE_SORT
 
-#ifndef SWAP
-#define SWAP
 
-template <typename S>
-void swap(S& a,S& b)
-{
-    S tmp;
-    tmp = a;
-    a = b;
-    b = tmp;
-    return;
-}
 
-#endif // SWAP
+
